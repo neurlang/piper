@@ -33,7 +33,7 @@ When you download from google drive, add confirm=yes to the URL and use wget.
         --dataset-dir "./train" \
         --accelerator 'gpu' \
         --devices 1 \
-        --batch-size 32 \ # 16 for 12GB
+        --batch-size 24 \ # 16/12GB 24/16GB
         --validation-split 0 \
         --num-test-examples 0 \
         --max_epochs 990000 \
