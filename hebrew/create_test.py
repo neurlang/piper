@@ -3,12 +3,12 @@ uv venv
 uv pip install piper_phonemize mishkal
 uv run hebrew/create_test.py > etc/test_sentences/test_he.jsonl 
 """
-import mishkal
+# import mishkal
 import json
 import piper_phonemize
 
 phonemes = [
-    "ʃalˈom olˈam! mˈa korˈe?",
+    "ʃalˈom olˈam! mˈa koʁˈe?",
     "bˈo teʁˈed, toχˈal ktsˈat tˈeʁed. ʔˈejze tχinˈa! jihjˈe tχˈina tovˈa! bˈo niʃtˈe bˈiʁa beʔˈiʁ habiʁˈa! hˈu pitˈa ʔotˈi leʔeχˈol pˈita ʃawˈaʁma!",
     "sˈimu lˈev, nosʔˈim jekaʁˈim. haʁakˈevet letˈel ʔavˈiv meʁkˈaz tikanˈes leʁatsˈif mispˈaʁ ʃalˈoʃ beʔˈod mispˈaʁ dakˈot. ʔˈana hitʁaχakˈu miktsˈe haʁatsˈif vehamtˈinu meʔaχoʁˈej hakˈav hatsahˈov."
 ]
