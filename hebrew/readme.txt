@@ -46,7 +46,8 @@ When you download from google drive, add confirm=yes to the URL and use wget.
         python3 -m piper_train.infer \
             --sample-rate 22050 \
             --checkpoint ./train/lightning_logs/version_0/checkpoints/*.ckpt \
-            --output-dir ./output
+            --output-dir ./output \
+            --length-scale 1.4
 
 7. Check loss_disc_all graph and ensure it keep decreasing
     uv run tensorboard --logdir ./train/lightning_logs/
