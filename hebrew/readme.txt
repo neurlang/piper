@@ -47,7 +47,7 @@ When you download from google drive, add confirm=yes to the URL and use wget.
             --sample-rate 22050 \
             --checkpoint ./train/lightning_logs/version_0/checkpoints/*.ckpt \
             --output-dir ./output \
-            --length-scale 1.4
+            --length-scale 1.3
 
 7. Check loss_disc_all graph and ensure it keep decreasing
     uv run tensorboard --logdir ./train/lightning_logs/
