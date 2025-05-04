@@ -77,3 +77,38 @@ Depcrecated
     cmake --build build
     &./piper.exe --model en_US-bryce-medium.onnx --config config.json --text "Hello, world!" --output_file output.wav
     english, bryce medium
+
+
+Send audio to telegram every one hour
+
+
+Open https://t.me/BotFather and create bot
+Send a message to the bot
+Open https://api.telegram.org/bot<YOUR_BOT_TOKEN>/getUpdates
+Copy you user ID
+
+
+
+# Telegram Bot credentials
+BOT_TOKEN="bot token"
+CHAT_ID="chatid"
+
+while true; do
+  # Run inference
+  cat ../../etc/test_sentences/test_he.jsonl | \
+  python3 -m piper_train.infer \
+      --sample-rate 22050 \
+      --checkpoint ./train/lightning_logs/version_1/checkpoints/*.ckpt \
+      --output-dir ./output \
+      --length-scale 1.3
+
+  # Send audio files
+  for FILE in output/1.wav output/2.wav; do
+    curl -s -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendAudio" \
+      -F chat_id="${CHAT_ID}" \
+      -F audio=@"${FILE}"
+  done
+
+  # Sleep for 20 minutes
+  sleep 1200
+done
