@@ -19,7 +19,7 @@ EspeakWrapper.set_data_path(espeakng_loader.get_data_path())
 phonemes = [
     "ʃalˈom olˈam! mˈa koʁˈe?",
     "sˈimu lev nosʔˈim jekaʁˈim. haʁakˈevet letel ʔavˈiv meʁkˈaz tikanˈes leʁatsˈif mispˈaʁ ʃalˈoʃ beʔˈod mispˈaʁ dakˈot. ʔˈana hitʁaχakˈu miktsˈe haʁatsˈif vehamtˈinu meʔaχoʁˈej hakav hatsahˈov.",
-    "ma ze ma ata ze ata ma ata omˈer",
+    "mˈa zˈe mˈa atˈa zˈe atˈa mˈa atˈa omˈer",
     "bˈo teʁˈed, toχˈal ktsˈat tˈeʁed. ʔˈejze tχinˈa! jihjˈe tχˈina tovˈa! bˈo niʃtˈe bˈiʁa beʔˈiʁ habiʁˈa! hˈu pitˈa ʔotˈi leʔeχˈol pˈita ʃawˈaʁma!",
     phonemizer.phonemize('Just kicking back with some good music, letting the vibes do their thing.')
 ]
