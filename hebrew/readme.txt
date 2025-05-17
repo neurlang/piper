@@ -25,7 +25,7 @@ When you download from google drive, add confirm=yes to the URL and use wget.
     --input-dir ../../hebrew/dummy_dataset \
     --output-dir ./train \
     --dataset-format ljspeech \
-    --single-speaker \ 
+    --single-speaker \
     --sample-rate 22050 \
     --phoneme_type raw
 
