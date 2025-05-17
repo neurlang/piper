@@ -38,6 +38,9 @@ class PhonemeType(str, Enum):
 
     TEXT = "text"
     """Phonemes come from text itself"""
+    
+    RAW = "raw"
+    """Raw espeak-compatible phonemes"""
 
 
 def main() -> None:
@@ -102,9 +105,6 @@ def main() -> None:
     )
     parser.add_argument(
         "--debug", action="store_true", help="Print DEBUG messages to the console"
-    )
-    parser.add_argument(
-        "--raw-phonemes", action="store_true", help="Raw espeak compatible phonemes"
     )
     args = parser.parse_args()
 
@@ -302,7 +302,7 @@ def phonemize_batch_espeak(
                         utt.text = tashkeel_run(utt.text)
 
                     _LOGGER.debug(utt)
-                    if args.raw_phonemes:
+                    if args.phoneme_type == PhonemeType.RAW:
                         all_phonemes = [list(utt.text)]
                     else:
                         all_phonemes = phonemize_espeak(casing(utt.text), args.language)
