@@ -27,7 +27,7 @@ When you download from google drive, add confirm=yes to the URL and use wget.
     --dataset-format ljspeech \
     --single-speaker \
     --sample-rate 22050 \
-    --phoneme_type raw
+    --phoneme-type raw
 
 replace --single-speaker with --speaker-id 940 for multi speaker 
 
