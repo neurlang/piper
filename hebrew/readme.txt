@@ -25,9 +25,11 @@ When you download from google drive, add confirm=yes to the URL and use wget.
     --input-dir ../../hebrew/dummy_dataset \
     --output-dir ./train \
     --dataset-format ljspeech \
-    --single-speaker \ # replace with --speaker-id 940 for multi speaker
+    --single-speaker \ 
     --sample-rate 22050 \
     --phoneme_type raw
+
+replace --single-speaker with --speaker-id 940 for multi speaker 
 
 5. Train
     uv run python -m piper_train \
