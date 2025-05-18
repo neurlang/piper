@@ -29,6 +29,9 @@ When you download from google drive, add confirm=yes to the URL and use wget.
     --sample-rate 22050 \
     --phoneme-type raw
 
+Note: you may need to set 
+    export OMP_NUM_THREADS=1
+
 replace --single-speaker with --speaker-id 940 for multi speaker 
 
 5. Train
