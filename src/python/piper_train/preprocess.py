@@ -69,6 +69,9 @@ def main() -> None:
         "--single-speaker", action="store_true", help="Force single speaker dataset"
     )
     parser.add_argument(
+        "--multi-speaker", action="store_true", help="Force multi speaker dataset"
+    )
+    parser.add_argument(
         "--speaker-id", type=int, help="Add speaker id to single speaker dataset"
     )
     #
@@ -150,7 +153,7 @@ def main() -> None:
 
     assert num_utterances > 0, "No utterances found"
 
-    is_multispeaker = len(speaker_counts) > 1
+    is_multispeaker = len(speaker_counts) > 1 or args.multi_speaker
     speaker_ids: Dict[str, int] = {}
 
     if is_multispeaker:
