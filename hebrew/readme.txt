@@ -39,13 +39,15 @@ replace --single-speaker with --speaker-id 940 for multi speaker
         --dataset-dir "./train" \
         --accelerator 'gpu' \
         --devices 1 \
-        --batch-size 24 \ # 16/12GB 24/16GB
+        --batch-size 24 \
         --validation-split 0 \
         --num-test-examples 0 \
         --max_epochs 990000 \
         --resume_from_checkpoint ./epoch=4641-step=3104302.ckpt \
         --checkpoint-epochs 1 \
         --precision 32
+    
+Batch sizes: 16/12GB 24/16GB
 
 6. Check while train
     cat ../../etc/test_sentences/test_he.jsonl  | \
