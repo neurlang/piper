@@ -19,6 +19,7 @@ def raw_phoneme_id_map(path):
                     phoneme_map[p] = next_id
                     next_id += 1
 
+    phoneme_map = {k: [v] for k, v in phoneme_map.items()}
     return phoneme_map
 
 
