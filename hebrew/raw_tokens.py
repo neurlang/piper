@@ -1,6 +1,7 @@
 import argparse
 import random
 import os
+import json
 
 # Cleaned token set for Piper
 piper_256_tokens = ' !"#$\'(),-.0123456789:;?^_abcdefhijklmnopqrstuvwxyzæçðøħŋœǀǁǂǃɐɑɒɓɔɕɖɗɘəɚɛɜɞɟɠɡɢɣɤɥɦɧɨɪɫɬɭɮɯɰɱɲɳɴɵɶɸɹɺɻɽɾʀʁʂʃʄʈʉʊʋʌʍʎʏʐʑʒʔʕʘʙʛʜʝʟʡʢʰʲˈˌːˑ˞ˤ̧̩̪̯̺̻̃βεθχᵻ↑↓ⱱ'
@@ -28,6 +29,8 @@ def map_hebrew_to_random_tokens(input_path, output_path):
         raise ValueError("Not enough Piper tokens to cover all Hebrew characters.")
 
     mapping = dict(zip(hebrew_chars, random.sample(piper_256_tokens, len(hebrew_chars))))
+    with open("hebrew2piper.json", "w", encoding="utf-8") as map_fp:
+        json.dump(mapping, map_fp, ensure_ascii=False, indent=4)
 
     print("Mapping:", mapping)  # Optional: Show for debugging
 
