@@ -10,6 +10,7 @@ import piper_phonemize
 from phonemizer.backend.espeak.wrapper import EspeakWrapper
 import phonemizer
 import espeakng_loader
+import sys
 
 EspeakWrapper.set_library(espeakng_loader.get_library_path())
 EspeakWrapper.set_data_path(espeakng_loader.get_data_path())
@@ -17,16 +18,24 @@ EspeakWrapper.set_data_path(espeakng_loader.get_data_path())
 
 
 phonemes = [
-    "ʃalˈom olˈam! mˈa koʁˈe?",
-    "sˈimu lev nosʔˈim jekaʁˈim. haʁakˈevet letel ʔavˈiv meʁkˈaz tikanˈes leʁatsˈif mispˈaʁ ʃalˈoʃ beʔˈod mispˈaʁ dakˈot. ʔˈana hitʁaχakˈu miktsˈe haʁatsˈif vehamtˈinu meʔaχoʁˈej hakˈav hatsahˈov, todˈa!",
-    "mˈa zˈe mˈa atˈa zˈe atˈa mˈa atˈa omˈer",
-    "bˈo teʁˈed, toχˈal ktsˈat tˈeʁed. ʔˈejze tχinˈa! jihjˈe tχˈina tovˈa! bˈo niʃtˈe bˈiʁa beʔˈiʁ habiʁˈa! hˈu pitˈa ʔotˈi leʔeχˈol pˈita ʃawˈaʁma!",
-    phonemizer.phonemize('Just kicking back with some good music, letting the vibes do their thing.')
+    # "ʃalˈom olˈam! mˈa koʁˈe?",
+    # "sˈimu lev nosʔˈim jekaʁˈim. haʁakˈevet letel ʔavˈiv meʁkˈaz tikanˈes leʁatsˈif mispˈaʁ ʃalˈoʃ beʔˈod mispˈaʁ dakˈot. ʔˈana hitʁaχakˈu miktsˈe haʁatsˈif vehamtˈinu meʔaχoʁˈej hakˈav hatsahˈov, todˈa!",
+    # "mˈa zˈe mˈa atˈa zˈe atˈa mˈa atˈa omˈer",
+    # "bˈo teʁˈed, toχˈal ktsˈat tˈeʁed. ʔˈejze tχinˈa! jihjˈe tχˈina tovˈa! bˈo niʃtˈe bˈiʁa beʔˈiʁ habiʁˈa! hˈu pitˈa ʔotˈi leʔeχˈol pˈita ʃawˈaʁma!",
+    "uṽn, bvɪaʊɾ! ɟ̃8ɥǀ ɟr:ħ8 8ʉucðɶ ɶʊɭŗðɞ ɶʉɥǀ ʜʊ8vcðɚ?"
+    # phonemizer.phonemize('Just kicking back with some good music, letting the vibes do their thing.')
 ]
+
+def get_ids(phonemes: list[str]) -> list[int]:
+    with open(sys.argv[1]) as fp:
+        phoneme_ids_map: dict[str, list[int]] = json.load(fp)['phoneme_id_map']
+    ids = [phoneme_ids_map.get(i, [0])[0] for i in phonemes] # pad if unknown
+    return ids
 
 for p in phonemes:
     p = list(p)
-    ids =  piper_phonemize.phoneme_ids_espeak(p)
+    # ids =  piper_phonemize.phoneme_ids_espeak(p)
+    ids =  get_ids(p)
     print(json.dumps({"text": "".join(p), "phonemes": p, "phoneme_ids": ids}, ensure_ascii=False), end='\n')
 
 
