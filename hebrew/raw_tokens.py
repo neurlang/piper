@@ -5,7 +5,8 @@ import json
 
 # Cleaned token set for Piper
 piper_256_tokens = ' !"#$\'(),-.0123456789:;?^_abcdefhijklmnopqrstuvwxyzæçðøħŋœǀǁǂǃɐɑɒɓɔɕɖɗɘəɚɛɜɞɟɠɡɢɣɤɥɦɧɨɪɫɬɭɮɯɰɱɲɳɴɵɶɸɹɺɻɽɾʀʁʂʃʄʈʉʊʋʌʍʎʏʐʑʒʔʕʘʙʛʜʝʟʡʢʰʲˈˌːˑ˞ˤ̧̩̪̯̺̻̃βεθχᵻ↑↓ⱱ'
-piper_256_tokens = ''.join(i for i in piper_256_tokens if i not in ' $^_') # remove special tokens
+piper_256_tokens = ''.join(i for i in piper_256_tokens if i not in ' $^_') # Remove special tokens
+piper_256_tokens = ''.join(i for i in piper_256_tokens if i.isalpha()) # Keep only alphabet tokens
 
 def is_hebrew_char(c):
     return '\u05b0' <= c <= '\u05ea'
