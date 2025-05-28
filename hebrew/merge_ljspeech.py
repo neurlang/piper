@@ -26,7 +26,8 @@ def main():
     args = parser.parse_args()
 
     output_dir = Path(args.output)
-    output_dir.mkdir(parents=True, exist_ok=True)
+    output_wav_dir = output_dir / "wav"
+    output_wav_dir.mkdir(parents=True, exist_ok=True)
 
     combined_metadata = []
     seen_ids = set()
@@ -49,8 +50,8 @@ def main():
                     suffix += 1
                 seen_ids.add(file_id)
 
-                orig_wav = dataset_path / f"{orig_file_id}.wav"
-                new_wav = output_dir / f"{file_id}.wav"
+                orig_wav = dataset_path / "wav" / f"{orig_file_id}.wav"
+                new_wav = output_wav_dir / f"{file_id}.wav"
                 if not orig_wav.is_file():
                     print(f"Warning: wav file {orig_wav} not found, skipping row.")
                     continue
