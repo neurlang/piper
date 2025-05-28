@@ -14,6 +14,9 @@ def main():
         help="Output folder for merged dataset"
     )
     args = parser.parse_args()
+    print(f"🧪 Inputs: {args.inputs}")
+    print(f"🧪 Output: {args.output}")
+
 
     output_dir = Path(args.output)
     output_wav_dir = output_dir / "wav"
