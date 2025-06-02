@@ -38,7 +38,7 @@ def get_ids(phonemes: list[str]) -> list[int]:
     with open(sys.argv[1]) as fp:
         map_data = json.load(fp)
         map_data = map_data['phoneme_id_map']
-    ids = [_BOS]
+    ids = [map_data[_BOS]]
     for p in phonemes:
         if p in map_data:
             ids.extend(map_data[p])
