@@ -4,8 +4,8 @@ uv venv
 uv pip install piper_phonemize mishkal phonemizer-fork espeakng-loader
 uv run hebrew/create_test.py > etc/test_sentences/test_he.jsonl 
 
-wget https://huggingface.co/thewh1teagle/phonikud-tts-checkpoints/resolve/main/model.config.json
-uv run hebrew/create_test.py model.config.json
+wget https://huggingface.co/thewh1teagle/phonikud-tts-checkpoints/resolve/main/model.config.json -O hebrew/model.config.json
+uv run hebrew/create_test.py hebrew/model.config.json
 """
 # import mishkal
 import json
