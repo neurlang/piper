@@ -32,9 +32,18 @@ phonemes = [
 ]
 
 def get_ids(phonemes: list[str]) -> list[int]:
+    _BOS = "^"
+    _EOS = "$"
+    _PAD = "_"
     with open(sys.argv[1]) as fp:
-        phoneme_ids_map: dict[str, list[int]] = json.load(fp)['phoneme_id_map']
-    ids = [phoneme_ids_map.get(i, [0])[0] for i in phonemes] # pad if unknown
+        map_data = json.load(fp)
+        map_data = map_data['phoneme_id_map']
+    ids = [_BOS]
+    for p in phonemes:
+        if p in map_data:
+            ids.extend(map_data[p])
+            ids.extend(map_data[_PAD])
+    ids.extend(map_data[_EOS])
     return ids
 
 for p in phonemes:
