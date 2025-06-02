@@ -14,6 +14,7 @@ import json
 # import phonemizer
 # import espeakng_loader
 import sys
+from pathlib import Path
 
 # EspeakWrapper.set_library(espeakng_loader.get_library_path())
 # EspeakWrapper.set_data_path(espeakng_loader.get_data_path())
@@ -40,7 +41,11 @@ for p in phonemes:
     p = list(p)
     # ids =  piper_phonemize.phoneme_ids_espeak(p)
     ids =  get_ids(p)
-    print(json.dumps({"text": "".join(p), "phonemes": p, "phoneme_ids": ids}, ensure_ascii=False), end='\n')
+    data = json.dumps({"text": "".join(p), "phonemes": p, "phoneme_ids": ids}, ensure_ascii=False)
+    print(data)
+    with open(Path(__file__).parent / '../etc/test_sentences/test_he.jsonl', 'w', encoding='utf-8') as fp:
+        fp.write(data)
+
 
 
 
