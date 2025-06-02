@@ -41,7 +41,7 @@ for p in phonemes:
     p = list(p)
     # ids =  piper_phonemize.phoneme_ids_espeak(p)
     ids =  get_ids(p)
-    data = json.dumps({"text": "".join(p), "phonemes": p, "phoneme_ids": ids}, ensure_ascii=False)
+    data = json.dumps({"text": "".join(p), "phonemes": p, "phoneme_ids": ids}, ensure_ascii=False) + '\n'
     print(data)
     with open(Path(__file__).parent / '../etc/test_sentences/test_he.jsonl', 'w', encoding='utf-8') as fp:
         fp.write(data)
