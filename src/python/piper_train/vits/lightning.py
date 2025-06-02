@@ -118,6 +118,10 @@ class VitsModel(pl.LightningModule):
         self._y = None
         self._y_hat = None
 
+    def lr_scheduler_step(self, scheduler, metric, optimizer_idx, *args, **kwargs):
+        """Required for newer lightning versions"""
+        scheduler.step()
+
     def _load_datasets(
         self,
         validation_split: float,

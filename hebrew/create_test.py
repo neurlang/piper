@@ -1,19 +1,22 @@
 """
+
 uv venv
 uv pip install piper_phonemize mishkal phonemizer-fork espeakng-loader
 uv run hebrew/create_test.py > etc/test_sentences/test_he.jsonl 
+
+wget https://huggingface.co/thewh1teagle/phonikud-tts-checkpoints/resolve/main/model.config.json
+uv run hebrew/create_test.py model.config.json
 """
 # import mishkal
 import json
-import piper_phonemize
-
-from phonemizer.backend.espeak.wrapper import EspeakWrapper
-import phonemizer
-import espeakng_loader
+# import piper_phonemize
+# from phonemizer.backend.espeak.wrapper import EspeakWrapper
+# import phonemizer
+# import espeakng_loader
 import sys
 
-EspeakWrapper.set_library(espeakng_loader.get_library_path())
-EspeakWrapper.set_data_path(espeakng_loader.get_data_path())
+# EspeakWrapper.set_library(espeakng_loader.get_library_path())
+# EspeakWrapper.set_data_path(espeakng_loader.get_data_path())
 
 
 
@@ -22,7 +25,8 @@ phonemes = [
     # "sˈimu lev nosʔˈim jekaʁˈim. haʁakˈevet letel ʔavˈiv meʁkˈaz tikanˈes leʁatsˈif mispˈaʁ ʃalˈoʃ beʔˈod mispˈaʁ dakˈot. ʔˈana hitʁaχakˈu miktsˈe haʁatsˈif vehamtˈinu meʔaχoʁˈej hakˈav hatsahˈov, todˈa!",
     # "mˈa zˈe mˈa atˈa zˈe atˈa mˈa atˈa omˈer",
     # "bˈo teʁˈed, toχˈal ktsˈat tˈeʁed. ʔˈejze tχinˈa! jihjˈe tχˈina tovˈa! bˈo niʃtˈe bˈiʁa beʔˈiʁ habiʁˈa! hˈu pitˈa ʔotˈi leʔeχˈol pˈita ʃawˈaʁma!",
-    "uṽn, bvɪaʊɾ! ɟ̃8ɥǀ ɟr:ħ8 8ʉucðɶ ɶʊɭŗðɞ ɶʉɥǀ ʜʊ8vcðɚ?"
+    # "uṽn, bvɪaʊɾ! ɟ̃8ɥǀ ɟr:ħ8 8ʉucðɶ ɶʊɭŗðɞ ɶʉɥǀ ʜʊ8vcðɚ?"
+    "ɬɳɠ ɬɤˌɛtɠ vʏχsɳɑɠ mʎːʏɛʛɻ ɨɤm ˈɛɥʛᵻʎvɥbtɠ, ɬtˌ ʄɤʛɻɥʟɛʎɨʏχˌʎɑʏ ʛɻtm ʛɻɳɑnɛʏɛɑ ʄʎɬɤǃɥmɳɑɠ,"
     # phonemizer.phonemize('Just kicking back with some good music, letting the vibes do their thing.')
 ]
 
