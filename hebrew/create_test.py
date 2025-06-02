@@ -23,11 +23,11 @@ from pathlib import Path
 
 phonemes = [
     # "ʃalˈom olˈam! mˈa koʁˈe?",
-    # "sˈimu lev nosʔˈim jekaʁˈim. haʁakˈevet letel ʔavˈiv meʁkˈaz tikanˈes leʁatsˈif mispˈaʁ ʃalˈoʃ beʔˈod mispˈaʁ dakˈot. ʔˈana hitʁaχakˈu miktsˈe haʁatsˈif vehamtˈinu meʔaχoʁˈej hakˈav hatsahˈov, todˈa!",
+    "sˈimu lev nosʔˈim jekaʁˈim. haʁakˈevet letel ʔavˈiv meʁkˈaz tikanˈes leʁatsˈif mispˈaʁ ʃalˈoʃ beʔˈod mispˈaʁ dakˈot. ʔˈana hitʁaχakˈu miktsˈe haʁatsˈif vehamtˈinu meʔaχoʁˈej hakˈav hatsahˈov, todˈa!",
     # "mˈa zˈe mˈa atˈa zˈe atˈa mˈa atˈa omˈer",
     # "bˈo teʁˈed, toχˈal ktsˈat tˈeʁed. ʔˈejze tχinˈa! jihjˈe tχˈina tovˈa! bˈo niʃtˈe bˈiʁa beʔˈiʁ habiʁˈa! hˈu pitˈa ʔotˈi leʔeχˈol pˈita ʃawˈaʁma!",
     # "uṽn, bvɪaʊɾ! ɟ̃8ɥǀ ɟr:ħ8 8ʉucðɶ ɶʊɭŗðɞ ɶʉɥǀ ʜʊ8vcðɚ?"
-    "ɬɳɠ ɬɤˌɛtɠ vʏχsɳɑɠ mʎːʏɛʛɻ ɨɤm ˈɛɥʛᵻʎvɥbtɠ, ɬtˌ ʄɤʛɻɥʟɛʎɨʏχˌʎɑʏ ʛɻtm ʛɻɳɑnɛʏɛɑ ʄʎɬɤǃɥmɳɑɠ,"
+    # "ɬɳɠ ɬɤˌɛtɠ vʏχsɳɑɠ mʎːʏɛʛɻ ɨɤm ˈɛɥʛᵻʎvɥbtɠ, ɬtˌ ʄɤʛɻɥʟɛʎɨʏχˌʎɑʏ ʛɻtm ʛɻɳɑnɛʏɛɑ ʄʎɬɤǃɥmɳɑɠ,"
     # phonemizer.phonemize('Just kicking back with some good music, letting the vibes do their thing.')
 ]
 
