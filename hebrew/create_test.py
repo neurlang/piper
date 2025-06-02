@@ -23,7 +23,8 @@ from pathlib import Path
 
 phonemes = [
     # "ʃalˈom olˈam! mˈa koʁˈe?",
-    "sˈimu lev nosʔˈim jekaʁˈim. haʁakˈevet letel ʔavˈiv meʁkˈaz tikanˈes leʁatsˈif mispˈaʁ ʃalˈoʃ beʔˈod mispˈaʁ dakˈot. ʔˈana hitʁaχakˈu miktsˈe haʁatsˈif vehamtˈinu meʔaχoʁˈej hakˈav hatsahˈov, todˈa!",
+    # "sˈimu lev nosʔˈim jekaʁˈim. haʁakˈevet letel ʔavˈiv meʁkˈaz tikanˈes leʁatsˈif mispˈaʁ ʃalˈoʃ beʔˈod mispˈaʁ dakˈot. ʔˈana hitʁaχakˈu miktsˈe haʁatsˈif vehamtˈinu meʔaχoʁˈej hakˈav hatsahˈov, todˈa!",
+    "ʛɻʎmʏχɠ ʏɛˈɥvʏɛbɳɑɠ ʄɤˈɛʎɬɳɑɠ mʎɨʏχʛᵻɳɑɠ ʄɳɑɦɥŋʏχvɥɑʎʄ. mʎjɛʎʄ bɛwm bɛʎaɥ ǃʎʛɻtʄ mɳʟɥˌɛχʏv ɬtˌ ˈɛɥɨʎɑɤɑˌ ʄɤʄɳˌɥːɤjɛɥjʏɛˌ ʄɤçɛɥmʏχˈɛʎmɳɑˌ?"
     # "mˈa zˈe mˈa atˈa zˈe atˈa mˈa atˈa omˈer",
     # "bˈo teʁˈed, toχˈal ktsˈat tˈeʁed. ʔˈejze tχinˈa! jihjˈe tχˈina tovˈa! bˈo niʃtˈe bˈiʁa beʔˈiʁ habiʁˈa! hˈu pitˈa ʔotˈi leʔeχˈol pˈita ʃawˈaʁma!",
     # "uṽn, bvɪaʊɾ! ɟ̃8ɥǀ ɟr:ħ8 8ʉucðɶ ɶʊɭŗðɞ ɶʉɥǀ ʜʊ8vcðɚ?"
