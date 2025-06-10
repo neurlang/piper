@@ -25,7 +25,7 @@ def main():
         help="Save checkpoint every N epochs (default: 1)",
     )
     parser.add_argument(
-        "save-top-k",
+        "--save-top-k",
         type=int,
         default=1,
         help="How many top checkpoints to save in cycle. use -1 to save all checkpoints"
