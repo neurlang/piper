@@ -6,6 +6,7 @@ from pathlib import Path
 import torch
 from pytorch_lightning import Trainer
 from pytorch_lightning.callbacks import ModelCheckpoint
+from pytorch_lightning.callbacks import TQDMProgressBar
 
 from .vits.lightning import VitsModel
 
@@ -62,13 +63,18 @@ def main():
         num_symbols = int(config["num_symbols"])
         num_speakers = int(config["num_speakers"])
         sample_rate = int(config["audio"]["sample_rate"])
-
-    trainer = Trainer.from_argparse_args(args)
+    
+    callbacks = []
     if args.checkpoint_epochs is not None:
-        trainer.callbacks = [ModelCheckpoint(every_n_epochs=args.checkpoint_epochs, save_top_k=args.save_top_k)]
+        callbacks.append(ModelCheckpoint(
+            every_n_epochs=args.checkpoint_epochs,
+            save_top_k=args.save_top_k
+        ))
         _LOGGER.debug(
             "Checkpoints will be saved every %s epoch(s)", args.checkpoint_epochs
         )
+    callbacks.append(TQDMProgressBar(refresh_rate=20))
+    trainer = Trainer.from_argparse_args(args, callbacks=callbacks)
 
     dict_args = vars(args)
     if args.quality == "x-low":
