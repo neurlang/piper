@@ -120,3 +120,8 @@ while true; do
   # Sleep for 20 minutes
   sleep 1200
 done
+
+
+fix weights only issue
+
+TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD=1 PYTHONWARNINGS="ignore::UserWarning" 
