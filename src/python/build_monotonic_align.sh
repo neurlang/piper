@@ -2,12 +2,19 @@
 set -eo pipefail
 
 this_dir="$( cd "$( dirname "$0" )" && pwd )"
+uvpath=""
 
 if [ -d "${this_dir}/.venv" ]; then
     source "${this_dir}/.venv/bin/activate"
+    uvpath="${this_dir}/.venv/bin/"
+fi
+
+if [ -d "${this_dir}/../../venv" ]; then
+    source "${this_dir}/../../venv/bin/activate"
+    uvpath="${this_dir}/../../venv/bin/"
 fi
 
 cd "${this_dir}/piper_train/vits/monotonic_align"
 mkdir -p monotonic_align
-uv run cythonize -i core.pyx
+${uvpath}uv run cythonize -i core.pyx
 mv core*.so monotonic_align/
