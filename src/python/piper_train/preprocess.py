@@ -41,6 +41,46 @@ class PhonemeType(str, Enum):
     
     RAW = "raw"
     """Raw espeak-compatible phonemes"""
+    
+    PYGORUUT = "pygoruut"
+    """Phonemes come from pygoruut"""
+
+
+# Hardcoded JSON of valid phonemes for pygoruut
+_PYGORUUT_PHONEMES = [
+    # PAD, BOS, EOS (must be first)
+    "_", "^", "$",
+    # UPPER ASCII
+    "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
+    "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
+    # LOWER ASCII
+    "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m",
+    "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
+    # PUNCT
+    "!", "'", "(", ")", ",", "-", ".", ":", ";", "?", " ",
+    # VOWELS
+    "i", "y", "ɨ", "ʉ", "ɯ", "u", "ɪ", "ʏ", "ʊ", "e", "ø", "ɘ", "ə",
+    "ɵ", "ɤ", "o", "ɛ", "œ", "ɜ", "ɞ", "ʌ", "ɔ", "æ", "ɐ", "a", "ɶ",
+    "ɑ", "ɒ", "ᵻ",
+    # non pulmonic consonants
+    "ʘ", "ɓ", "ǀ", "ɗ", "ǃ", "ʄ", "ǂ", "ɠ", "ǁ", "ʛ",
+    # pulmonic consonants
+    "p", "b", "t", "d", "ʈ", "ɖ", "c", "ɟ", "k", "ɡ", "q", "ɢ", "ʔ",
+    "ɴ", "ŋ", "ɲ", "ɳ", "n", "ɱ", "m", "ʙ", "r", "ʀ", "ⱱ", "ɾ", "ɽ",
+    "ɸ", "β", "f", "v", "θ", "ð", "s", "z", "ʃ", "ʒ", "ʂ", "ʐ", "ç",
+    "ʝ", "x", "ɣ", "χ", "ʁ", "ħ", "ʕ", "h", "ɦ", "ɬ", "ɮ", "ʋ", "ɹ",
+    "ɻ", "j", "ɰ", "l", "ɭ", "ʎ", "ʟ",
+    # suprasegmentals
+    "ˈ", "ˌ", "ː", "ˑ",
+    # other symbols
+    "ʍ", "w", "ɥ", "ʜ", "ʢ", "ʡ", "ɕ", "ʑ", "ɺ", "ɧ", "ʲ",
+    # diacritics
+    "̃", "ɚ", "˞", "ɫ",
+    # tonal
+    "˥", "˦", "˧", "˨", "˩"
+]
+
+_PYGORUUT_PHONEME_MAP = {phoneme: i for i, phoneme in enumerate(_PYGORUUT_PHONEMES)}
 
 
 def main() -> None:
@@ -61,7 +101,7 @@ def main() -> None:
         help="Target sample rate for voice (hertz)",
     )
     parser.add_argument(
-        "--dataset-format", choices=("ljspeech", "mycroft"), required=True
+        "--dataset-format", choices=("ljspeech", "mycroft", "coqui"), required=True
     )
     parser.add_argument("--cache-dir", help="Directory to cache processed audio files")
     parser.add_argument("--max-workers", type=int)
@@ -171,6 +211,14 @@ def main() -> None:
     audio_quality = args.audio_quality or args.output_dir.name
     dataset_name = args.dataset_name or args.output_dir.parent.name
 
+    # Determine phoneme map for config
+    if args.phoneme_type == PhonemeType.TEXT:
+        phoneme_id_map = get_codepoints_map()[args.language]
+    elif args.phoneme_type == PhonemeType.PYGORUUT:
+        phoneme_id_map = {k: [v] for k, v in _PYGORUUT_PHONEME_MAP.items()}
+    else:
+        phoneme_id_map = get_espeak_map()
+
     with open(args.output_dir / "config.json", "w", encoding="utf-8") as config_file:
         json.dump(
             {
@@ -188,9 +236,7 @@ def main() -> None:
                 "inference": {"noise_scale": 0.667, "length_scale": 1, "noise_w": 0.8},
                 "phoneme_type": args.phoneme_type.value,
                 "phoneme_map": {},
-                "phoneme_id_map": get_codepoints_map()[args.language]
-                if args.phoneme_type == PhonemeType.TEXT
-                else get_espeak_map(),
+                "phoneme_id_map": phoneme_id_map,
                 "num_symbols": get_max_phonemes(),
                 "num_speakers": len(speaker_counts),
                 "speaker_id_map": speaker_ids,
@@ -211,14 +257,24 @@ def main() -> None:
     queue_in: "Queue[Iterable[Utterance]]" = JoinableQueue()
     queue_out: "Queue[Optional[Utterance]]" = Queue()
 
+    pygoruut = None
+    pygoruut_url = ""
     # Start workers
     if args.phoneme_type == PhonemeType.TEXT:
         target = phonemize_batch_text
+    elif args.phoneme_type == PhonemeType.PYGORUUT:
+        target = phonemize_batch_pygoruut
+        try:
+            from pygoruut.pygoruut import Pygoruut
+            pygoruut = Pygoruut(writeable_bin_dir='')
+            pygoruut_url = pygoruut.config.url('')
+        except ImportError:
+            _LOGGER.fatal("pygoruut is not installed. Please install it to use --phoneme-type pygoruut")
     else:
         target = phonemize_batch_espeak
 
     processes = [
-        Process(target=target, args=(args, queue_in, queue_out))
+        Process(target=target, args=(args, queue_in, queue_out, pygoruut_url))
         for _ in range(args.max_workers)
     ]
     for proc in processes:
@@ -270,6 +326,9 @@ def main() -> None:
     for proc in processes:
         proc.join(timeout=1)
 
+    if pygoruut is not None:
+        del pygoruut
+        pygoruut = None
 
 # -----------------------------------------------------------------------------
 
@@ -288,7 +347,7 @@ def get_text_casing(casing: str):
 
 
 def phonemize_batch_espeak(
-    args: argparse.Namespace, queue_in: JoinableQueue, queue_out: Queue
+    args: argparse.Namespace, queue_in: JoinableQueue, queue_out: Queue, url: str
 ):
     try:
         casing = get_text_casing(args.text_casing)
@@ -340,7 +399,7 @@ def phonemize_batch_espeak(
 
 
 def phonemize_batch_text(
-    args: argparse.Namespace, queue_in: JoinableQueue, queue_out: Queue
+    args: argparse.Namespace, queue_in: JoinableQueue, queue_out: Queue, url: str
 ):
     try:
         casing = get_text_casing(args.text_casing)
@@ -388,6 +447,80 @@ def phonemize_batch_text(
         _LOGGER.exception("phonemize_batch_text")
 
 
+_global_pygoruut = None
+
+def phonemize_batch_pygoruut(
+    args: argparse.Namespace, queue_in: JoinableQueue, queue_out: Queue, url: str
+):
+    try:
+        from pygoruut.pygoruut import Pygoruut
+        
+        casing = get_text_casing(args.text_casing)
+        silence_detector = make_silence_detector()
+        
+        pygoruut = Pygoruut(api=url)
+
+        while True:
+            utt_batch = queue_in.get()
+            if utt_batch is None:
+                break
+
+            for utt in utt_batch:
+                try:
+                    if args.tashkeel:
+                        utt.text = tashkeel_run(utt.text)
+
+                    _LOGGER.debug(utt)
+                    
+                    # Phonemize with pygoruut
+                    phonemized_text = str(pygoruut.phonemize(
+                        language=args.language, 
+                        sentence=casing(utt.text)
+                    ))
+                    
+                    # Split space-separated phonemes and flatten
+                    utt.phonemes = list(phonemized_text.strip())
+                    
+                    # Convert phonemes to IDs using hardcoded map
+                    utt.phoneme_ids = []
+                    for phoneme in utt.phonemes:
+                        if phoneme in _PYGORUUT_PHONEME_MAP:
+                            utt.phoneme_ids.append(_PYGORUUT_PHONEME_MAP[phoneme])
+                        else:
+                            utt.missing_phonemes[phoneme] += 1
+                            # Use a fallback ID (0 for unknown phoneme)
+                            utt.phoneme_ids.append(0)
+
+                    if not args.skip_audio:
+                        utt.audio_norm_path, utt.audio_spec_path = cache_norm_audio(
+                            utt.audio_path,
+                            args.cache_dir,
+                            silence_detector,
+                            args.sample_rate,
+                        )
+                    queue_out.put(utt)
+                except TimeoutError:
+                    _LOGGER.error("Skipping utterance due to timeout: %s", utt)
+                except Exception as e:
+                    _LOGGER.exception("Failed to process utterance: %s", utt)
+                    _LOGGER.error("Pygoruut error: %s", e)
+                    queue_out.put(None)
+
+            queue_in.task_done()
+    except ImportError:
+        _LOGGER.fatal("pygoruut is not installed. Please install it to use --phoneme-type pygoruut")
+        # Put None for each expected utterance to avoid hanging
+        while True:
+            utt_batch = queue_in.get()
+            if utt_batch is None:
+                break
+            for _ in utt_batch:
+                queue_out.put(None)
+            queue_in.task_done()
+    except Exception:
+        _LOGGER.exception("phonemize_batch_pygoruut")
+
+
 # -----------------------------------------------------------------------------
 
 
@@ -433,7 +566,7 @@ def ljspeech_dataset(args: argparse.Namespace) -> Iterable[Utterance]:
 
             speaker: Optional[str] = None
             if is_single_speaker or (len(row) == 2):
-                filename, text = row[0], row[-1]
+                filename, text = row[0], row[1 if args.dataset_format == "coqui" else -1]
             else:
                 filename, speaker, text = row[0], row[1], row[-1]
 
