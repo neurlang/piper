@@ -207,6 +207,20 @@ def main() -> None:
     else:
         _LOGGER.info("Single speaker dataset")
 
+    # boot Pygoruut before config, so version can be written to config
+    pygoruut = None
+    pygoruut_url = ""
+    pygoruut_version = None
+    if args.phoneme_type == PhonemeType.PYGORUUT:
+        target = phonemize_batch_pygoruut
+        try:
+            from pygoruut.pygoruut import Pygoruut
+            pygoruut = Pygoruut(writeable_bin_dir='')
+            pygoruut_url = pygoruut.config.url('')
+            pygoruut_version = pygoruut.exact_version()
+        except ImportError:
+            _LOGGER.fatal("pygoruut is not installed. Please install it to use --phoneme-type pygoruut")
+
     # Write config
     audio_quality = args.audio_quality or args.output_dir.name
     dataset_name = args.dataset_name or args.output_dir.parent.name
@@ -241,6 +255,7 @@ def main() -> None:
                 "num_speakers": len(speaker_counts),
                 "speaker_id_map": speaker_ids,
                 "piper_version": _VERSION,
+                "pygoruut_version": pygoruut_version,
             },
             config_file,
             ensure_ascii=False,
@@ -257,19 +272,11 @@ def main() -> None:
     queue_in: "Queue[Iterable[Utterance]]" = JoinableQueue()
     queue_out: "Queue[Optional[Utterance]]" = Queue()
 
-    pygoruut = None
-    pygoruut_url = ""
     # Start workers
     if args.phoneme_type == PhonemeType.TEXT:
         target = phonemize_batch_text
     elif args.phoneme_type == PhonemeType.PYGORUUT:
         target = phonemize_batch_pygoruut
-        try:
-            from pygoruut.pygoruut import Pygoruut
-            pygoruut = Pygoruut(writeable_bin_dir='')
-            pygoruut_url = pygoruut.config.url('')
-        except ImportError:
-            _LOGGER.fatal("pygoruut is not installed. Please install it to use --phoneme-type pygoruut")
     else:
         target = phonemize_batch_espeak
 
@@ -483,14 +490,18 @@ def phonemize_batch_pygoruut(
                     
                     # Convert phonemes to IDs using hardcoded map
                     utt.phoneme_ids = []
+                    # Use a beginning of sentence (^)
+                    utt.phoneme_ids.append(1)
                     for phoneme in utt.phonemes:
                         if phoneme in _PYGORUUT_PHONEME_MAP:
                             utt.phoneme_ids.append(_PYGORUUT_PHONEME_MAP[phoneme])
+                            # Use a padding ID (_ for padding)
+                            utt.phoneme_ids.append(0)
                         else:
                             utt.missing_phonemes[phoneme] += 1
-                            # Use a fallback ID (0 for unknown phoneme)
-                            utt.phoneme_ids.append(0)
 
+                    # Use an end of sentence ($)
+                    utt.phoneme_ids.append(2)
                     if not args.skip_audio:
                         utt.audio_norm_path, utt.audio_spec_path = cache_norm_audio(
                             utt.audio_path,
